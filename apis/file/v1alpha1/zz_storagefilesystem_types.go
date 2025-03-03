@@ -13,6 +13,9 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type SourceDetailsInitParameters struct {
+}
+
 type SourceDetailsObservation struct {
 
 	// The OCID of the file system that contains the source snapshot of a cloned file system. See Cloning a File System.
@@ -25,7 +28,134 @@ type SourceDetailsObservation struct {
 type SourceDetailsParameters struct {
 }
 
+type StorageFileSystemInitParameters struct {
+
+	// The availability domain to create the file system in.  Example: Uocm:PHX-AD-1
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
+
+	// Specifies whether the clone file system is attached to its parent file system. If the value is set to 'DETACH', then the file system will be created, which is deep copied from the snapshot specified by sourceSnapshotId, else will remain attached to its parent.
+	CloneAttachStatus *string `json:"cloneAttachStatus,omitempty" tf:"clone_attach_status,omitempty"`
+
+	// (Updatable) The OCID of the compartment to create the file system in.
+	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// Reference to a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDRef *v1.Reference `json:"compartmentIdRef,omitempty" tf:"-"`
+
+	// Selector for a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDSelector *v1.Selector `json:"compartmentIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags. Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) An optional property when incremented triggers Detach Clone. Could be set to any integer value.
+	DetachCloneTrigger *float64 `json:"detachCloneTrigger,omitempty" tf:"detach_clone_trigger,omitempty"`
+
+	// (Updatable) A user-friendly name. It does not have to be unique, and it is changeable. Avoid entering confidential information.  Example: My file system
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) The OCID of the associated file system snapshot policy, which controls the frequency of snapshot creation and retention period of the taken snapshots.
+	FilesystemSnapshotPolicyID *string `json:"filesystemSnapshotPolicyId,omitempty" tf:"filesystem_snapshot_policy_id,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags. Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	IsLockOverride *bool `json:"isLockOverride,omitempty" tf:"is_lock_override,omitempty"`
+
+	// (Updatable) The OCID of KMS key used to encrypt the encryption keys associated with this file system. May be unset as a blank or deleted from the configuration to remove the KMS key.
+	KMSKeyID *string `json:"kmsKeyId,omitempty" tf:"kms_key_id,omitempty"`
+
+	// Locks associated with this resource.
+	Locks []StorageFileSystemLocksInitParameters `json:"locks,omitempty" tf:"locks,omitempty"`
+
+	// The OCID of the snapshot used to create a cloned file system. See Cloning a File System.
+	SourceSnapshotID *string `json:"sourceSnapshotId,omitempty" tf:"source_snapshot_id,omitempty"`
+}
+
+type StorageFileSystemLocksInitParameters struct {
+
+	// A message added by the creator of the lock. This is typically used to give an indication of why the resource is locked.
+	Message *string `json:"message,omitempty" tf:"message,omitempty"`
+
+	// The ID of the resource that is locking this resource. Indicates that deleting this resource will remove the lock.
+	RelatedResourceID *string `json:"relatedResourceId,omitempty" tf:"related_resource_id,omitempty"`
+
+	// When the lock was created.
+	TimeCreated *string `json:"timeCreated,omitempty" tf:"time_created,omitempty"`
+
+	// Type of the lock.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type StorageFileSystemLocksObservation struct {
+
+	// A message added by the creator of the lock. This is typically used to give an indication of why the resource is locked.
+	Message *string `json:"message,omitempty" tf:"message,omitempty"`
+
+	// The ID of the resource that is locking this resource. Indicates that deleting this resource will remove the lock.
+	RelatedResourceID *string `json:"relatedResourceId,omitempty" tf:"related_resource_id,omitempty"`
+
+	// When the lock was created.
+	TimeCreated *string `json:"timeCreated,omitempty" tf:"time_created,omitempty"`
+
+	// Type of the lock.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type StorageFileSystemLocksParameters struct {
+
+	// A message added by the creator of the lock. This is typically used to give an indication of why the resource is locked.
+	// +kubebuilder:validation:Optional
+	Message *string `json:"message,omitempty" tf:"message,omitempty"`
+
+	// The ID of the resource that is locking this resource. Indicates that deleting this resource will remove the lock.
+	// +kubebuilder:validation:Optional
+	RelatedResourceID *string `json:"relatedResourceId,omitempty" tf:"related_resource_id,omitempty"`
+
+	// When the lock was created.
+	// +kubebuilder:validation:Optional
+	TimeCreated *string `json:"timeCreated,omitempty" tf:"time_created,omitempty"`
+
+	// Type of the lock.
+	// +kubebuilder:validation:Optional
+	Type *string `json:"type" tf:"type,omitempty"`
+}
+
 type StorageFileSystemObservation struct {
+
+	// The availability domain to create the file system in.  Example: Uocm:PHX-AD-1
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
+
+	// Specifies whether the clone file system is attached to its parent file system. If the value is set to 'DETACH', then the file system will be created, which is deep copied from the snapshot specified by sourceSnapshotId, else will remain attached to its parent.
+	CloneAttachStatus *string `json:"cloneAttachStatus,omitempty" tf:"clone_attach_status,omitempty"`
+
+	// Specifies the total number of children of a file system.
+	CloneCount *float64 `json:"cloneCount,omitempty" tf:"clone_count,omitempty"`
+
+	// (Updatable) The OCID of the compartment to create the file system in.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags. Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) An optional property when incremented triggers Detach Clone. Could be set to any integer value.
+	DetachCloneTrigger *float64 `json:"detachCloneTrigger,omitempty" tf:"detach_clone_trigger,omitempty"`
+
+	// (Updatable) A user-friendly name. It does not have to be unique, and it is changeable. Avoid entering confidential information.  Example: My file system
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) The OCID of the associated file system snapshot policy, which controls the frequency of snapshot creation and retention period of the taken snapshots.
+	FilesystemSnapshotPolicyID *string `json:"filesystemSnapshotPolicyId,omitempty" tf:"filesystem_snapshot_policy_id,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags. Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// The OCID of the file system.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -36,11 +166,19 @@ type StorageFileSystemObservation struct {
 	// Specifies whether the data has finished copying from the source to the clone. Hydration can take up to several hours to complete depending on the size of the source. The source and clone remain available during hydration, but there may be some performance impact. See Cloning a File System.
 	IsHydrated *bool `json:"isHydrated,omitempty" tf:"is_hydrated,omitempty"`
 
-	// Specifies whether the file system can be used as a target file system for replication. For more information, see Using Replication.
+	IsLockOverride *bool `json:"isLockOverride,omitempty" tf:"is_lock_override,omitempty"`
+
+	// Specifies whether the file system can be used as a target file system for replication. The system sets this value to true if the file system is unexported, hasn't yet been specified as a target file system in any replication resource, and has no user snapshots. After the file system has been specified as a target in a replication, or if the file system contains user snapshots, the system sets this value to false. For more information, see Using Replication.
 	IsTargetable *bool `json:"isTargetable,omitempty" tf:"is_targetable,omitempty"`
+
+	// (Updatable) The OCID of KMS key used to encrypt the encryption keys associated with this file system. May be unset as a blank or deleted from the configuration to remove the KMS key.
+	KMSKeyID *string `json:"kmsKeyId,omitempty" tf:"kms_key_id,omitempty"`
 
 	// Additional information about the current 'lifecycleState'.
 	LifecycleDetails *string `json:"lifecycleDetails,omitempty" tf:"lifecycle_details,omitempty"`
+
+	// Locks associated with this resource.
+	Locks []StorageFileSystemLocksObservation `json:"locks,omitempty" tf:"locks,omitempty"`
 
 	// The number of bytes consumed by the file system, including any snapshots. This number reflects the metered size of the file system and is updated asynchronously with respect to updates to the file system. For more information, see File System Usage and Metering.
 	MeteredBytes *string `json:"meteredBytes,omitempty" tf:"metered_bytes,omitempty"`
@@ -51,18 +189,29 @@ type StorageFileSystemObservation struct {
 	// Source information for the file system.
 	SourceDetails []SourceDetailsObservation `json:"sourceDetails,omitempty" tf:"source_details,omitempty"`
 
+	// The OCID of the snapshot used to create a cloned file system. See Cloning a File System.
+	SourceSnapshotID *string `json:"sourceSnapshotId,omitempty" tf:"source_snapshot_id,omitempty"`
+
 	// The current state of the file system.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
 
-	// The date and time the file system was created, expressed in RFC 3339 timestamp format.  Example: 2016-08-25T21:10:29.600Z
+	// System tags for this resource. System tags are applied to resources by internal Oracle Cloud Infrastructure services.
+	// +mapType=granular
+	SystemTags map[string]*string `json:"systemTags,omitempty" tf:"system_tags,omitempty"`
+
+	// When the lock was created.
 	TimeCreated *string `json:"timeCreated,omitempty" tf:"time_created,omitempty"`
 }
 
 type StorageFileSystemParameters struct {
 
 	// The availability domain to create the file system in.  Example: Uocm:PHX-AD-1
-	// +kubebuilder:validation:Required
-	AvailabilityDomain *string `json:"availabilityDomain" tf:"availability_domain,omitempty"`
+	// +kubebuilder:validation:Optional
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
+
+	// Specifies whether the clone file system is attached to its parent file system. If the value is set to 'DETACH', then the file system will be created, which is deep copied from the snapshot specified by sourceSnapshotId, else will remain attached to its parent.
+	// +kubebuilder:validation:Optional
+	CloneAttachStatus *string `json:"cloneAttachStatus,omitempty" tf:"clone_attach_status,omitempty"`
 
 	// (Updatable) The OCID of the compartment to create the file system in.
 	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
@@ -79,19 +228,36 @@ type StorageFileSystemParameters struct {
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags. Example: {"Operations.CostCenter": "42"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) An optional property when incremented triggers Detach Clone. Could be set to any integer value.
+	// +kubebuilder:validation:Optional
+	DetachCloneTrigger *float64 `json:"detachCloneTrigger,omitempty" tf:"detach_clone_trigger,omitempty"`
 
 	// (Updatable) A user-friendly name. It does not have to be unique, and it is changeable. Avoid entering confidential information.  Example: My file system
 	// +kubebuilder:validation:Optional
 	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
 
+	// (Updatable) The OCID of the associated file system snapshot policy, which controls the frequency of snapshot creation and retention period of the taken snapshots.
+	// +kubebuilder:validation:Optional
+	FilesystemSnapshotPolicyID *string `json:"filesystemSnapshotPolicyId,omitempty" tf:"filesystem_snapshot_policy_id,omitempty"`
+
 	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags. Example: {"Department": "Finance"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	IsLockOverride *bool `json:"isLockOverride,omitempty" tf:"is_lock_override,omitempty"`
 
 	// (Updatable) The OCID of KMS key used to encrypt the encryption keys associated with this file system. May be unset as a blank or deleted from the configuration to remove the KMS key.
 	// +kubebuilder:validation:Optional
 	KMSKeyID *string `json:"kmsKeyId,omitempty" tf:"kms_key_id,omitempty"`
+
+	// Locks associated with this resource.
+	// +kubebuilder:validation:Optional
+	Locks []StorageFileSystemLocksParameters `json:"locks,omitempty" tf:"locks,omitempty"`
 
 	// The OCID of the snapshot used to create a cloned file system. See Cloning a File System.
 	// +kubebuilder:validation:Optional
@@ -102,6 +268,17 @@ type StorageFileSystemParameters struct {
 type StorageFileSystemSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     StorageFileSystemParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider StorageFileSystemInitParameters `json:"initProvider,omitempty"`
 }
 
 // StorageFileSystemStatus defines the observed state of StorageFileSystem.
@@ -111,19 +288,21 @@ type StorageFileSystemStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // StorageFileSystem is the Schema for the StorageFileSystems API. Provides the File System resource in Oracle Cloud Infrastructure File Storage service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type StorageFileSystem struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              StorageFileSystemSpec   `json:"spec"`
-	Status            StorageFileSystemStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.availabilityDomain) || (has(self.initProvider) && has(self.initProvider.availabilityDomain))",message="spec.forProvider.availabilityDomain is a required parameter"
+	Spec   StorageFileSystemSpec   `json:"spec"`
+	Status StorageFileSystemStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

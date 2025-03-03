@@ -13,7 +13,37 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type DestinationsInitParameters struct {
+
+	// (Updatable) The port on the virtual service to target. Mandatory if the virtual deployments are listening on multiple ports.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+
+	// (Updatable) The OCID of the virtual service where the request will be routed.
+	// +crossplane:generate:reference:type=VirtualService
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
+
+	// Reference to a VirtualService to populate virtualServiceId.
+	// +kubebuilder:validation:Optional
+	VirtualServiceIDRef *v1.Reference `json:"virtualServiceIdRef,omitempty" tf:"-"`
+
+	// Selector for a VirtualService to populate virtualServiceId.
+	// +kubebuilder:validation:Optional
+	VirtualServiceIDSelector *v1.Selector `json:"virtualServiceIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Weight of traffic target.
+	Weight *float64 `json:"weight,omitempty" tf:"weight,omitempty"`
+}
+
 type DestinationsObservation struct {
+
+	// (Updatable) The port on the virtual service to target. Mandatory if the virtual deployments are listening on multiple ports.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+
+	// (Updatable) The OCID of the virtual service where the request will be routed.
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
+
+	// (Updatable) Weight of traffic target.
+	Weight *float64 `json:"weight,omitempty" tf:"weight,omitempty"`
 }
 
 type DestinationsParameters struct {
@@ -40,13 +70,28 @@ type DestinationsParameters struct {
 	Weight *float64 `json:"weight,omitempty" tf:"weight,omitempty"`
 }
 
+type IngressGatewayHostInitParameters struct {
+
+	// A user-friendly name. The name must be unique within the same ingress gateway and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) The port on the virtual service to target. Mandatory if the virtual deployments are listening on multiple ports.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+}
+
 type IngressGatewayHostObservation struct {
+
+	// A user-friendly name. The name must be unique within the same ingress gateway and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) The port on the virtual service to target. Mandatory if the virtual deployments are listening on multiple ports.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
 }
 
 type IngressGatewayHostParameters struct {
 
 	// A user-friendly name. The name must be unique within the same ingress gateway and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Name *string `json:"name" tf:"name,omitempty"`
 
 	// (Updatable) The port on the virtual service to target. Mandatory if the virtual deployments are listening on multiple ports.
@@ -54,18 +99,92 @@ type IngressGatewayHostParameters struct {
 	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
 }
 
+type IngressGatewayRouteTableInitParameters struct {
+
+	// (Updatable) The OCID of the compartment.
+	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// Reference to a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDRef *v1.Reference `json:"compartmentIdRef,omitempty" tf:"-"`
+
+	// Selector for a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDSelector *v1.Selector `json:"compartmentIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// The OCID of the service mesh in which this access policy is created.
+	// +crossplane:generate:reference:type=IngressGateway
+	IngressGatewayID *string `json:"ingressGatewayId,omitempty" tf:"ingress_gateway_id,omitempty"`
+
+	// Reference to a IngressGateway to populate ingressGatewayId.
+	// +kubebuilder:validation:Optional
+	IngressGatewayIDRef *v1.Reference `json:"ingressGatewayIdRef,omitempty" tf:"-"`
+
+	// Selector for a IngressGateway to populate ingressGatewayId.
+	// +kubebuilder:validation:Optional
+	IngressGatewayIDSelector *v1.Selector `json:"ingressGatewayIdSelector,omitempty" tf:"-"`
+
+	// A user-friendly name. The name must be unique within the same ingress gateway and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) The priority of the route table. Lower value means higher priority. The routes are declared based on the priority.
+	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
+
+	// (Updatable) The route rules for the ingress gateway.
+	RouteRules []RouteRulesInitParameters `json:"routeRules,omitempty" tf:"route_rules,omitempty"`
+}
+
 type IngressGatewayRouteTableObservation struct {
+
+	// (Updatable) The OCID of the compartment.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// Unique identifier that is immutable on creation.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	// The OCID of the service mesh in which this access policy is created.
+	IngressGatewayID *string `json:"ingressGatewayId,omitempty" tf:"ingress_gateway_id,omitempty"`
+
 	// A message describing the current state in more detail. For example, can be used to provide actionable information for a resource in a Failed state.
 	LifecycleDetails *string `json:"lifecycleDetails,omitempty" tf:"lifecycle_details,omitempty"`
+
+	// A user-friendly name. The name must be unique within the same ingress gateway and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) The priority of the route table. Lower value means higher priority. The routes are declared based on the priority.
+	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
+
+	// (Updatable) The route rules for the ingress gateway.
+	RouteRules []RouteRulesObservation `json:"routeRules,omitempty" tf:"route_rules,omitempty"`
 
 	// The current state of the Resource.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
 
 	// Usage of system tag keys. These predefined keys are scoped to namespaces. Example: {"orcl-cloud.free-tier-retained": "true"}
+	// +mapType=granular
 	SystemTags map[string]*string `json:"systemTags,omitempty" tf:"system_tags,omitempty"`
 
 	// The time when this resource was created in an RFC3339 formatted datetime string.
@@ -92,6 +211,7 @@ type IngressGatewayRouteTableParameters struct {
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
@@ -100,6 +220,7 @@ type IngressGatewayRouteTableParameters struct {
 
 	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// The OCID of the service mesh in which this access policy is created.
@@ -116,25 +237,82 @@ type IngressGatewayRouteTableParameters struct {
 	IngressGatewayIDSelector *v1.Selector `json:"ingressGatewayIdSelector,omitempty" tf:"-"`
 
 	// A user-friendly name. The name must be unique within the same ingress gateway and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// (Updatable) The priority of the route table. Lower value means higher priority. The routes are declared based on the priority.
 	// +kubebuilder:validation:Optional
 	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
 
 	// (Updatable) The route rules for the ingress gateway.
-	// +kubebuilder:validation:Required
-	RouteRules []RouteRulesParameters `json:"routeRules" tf:"route_rules,omitempty"`
+	// +kubebuilder:validation:Optional
+	RouteRules []RouteRulesParameters `json:"routeRules,omitempty" tf:"route_rules,omitempty"`
+}
+
+type RouteRulesInitParameters struct {
+
+	// (Updatable) The destination of the request.
+	Destinations []DestinationsInitParameters `json:"destinations,omitempty" tf:"destinations,omitempty"`
+
+	// (Updatable) The ingress gateway host to which the route rule attaches. If not specified, the route rule gets attached to all hosts on the ingress gateway.
+	IngressGatewayHost []IngressGatewayHostInitParameters `json:"ingressGatewayHost,omitempty" tf:"ingress_gateway_host,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the rule will check that the content-type header has a application/grpc or one of the various application/grpc+ values.
+	IsGRPC *bool `json:"isGrpc,omitempty" tf:"is_grpc,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the hostname will be rewritten to the target virtual deployment's DNS hostname.
+	IsHostRewriteEnabled *bool `json:"isHostRewriteEnabled,omitempty" tf:"is_host_rewrite_enabled,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the matched path prefix will be rewritten to '/' before being directed to the target virtual deployment.
+	IsPathRewriteEnabled *bool `json:"isPathRewriteEnabled,omitempty" tf:"is_path_rewrite_enabled,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Route to match
+	Path *string `json:"path,omitempty" tf:"path,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Match type for the route
+	PathType *string `json:"pathType,omitempty" tf:"path_type,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) The maximum duration in milliseconds for the upstream service to respond to a request.  If provided, the timeout value overrides the default timeout of 15 seconds for the HTTP based route rules, and disabled (no timeout) when 'isGrpc' is true.  The value 0 (zero) indicates that the timeout is disabled.  For streaming responses from the upstream service, consider either keeping the timeout disabled or set a sufficiently high value.
+	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
+
+	// (Updatable) Type of the traffic target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
 type RouteRulesObservation struct {
+
+	// (Updatable) The destination of the request.
+	Destinations []DestinationsObservation `json:"destinations,omitempty" tf:"destinations,omitempty"`
+
+	// (Updatable) The ingress gateway host to which the route rule attaches. If not specified, the route rule gets attached to all hosts on the ingress gateway.
+	IngressGatewayHost []IngressGatewayHostObservation `json:"ingressGatewayHost,omitempty" tf:"ingress_gateway_host,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the rule will check that the content-type header has a application/grpc or one of the various application/grpc+ values.
+	IsGRPC *bool `json:"isGrpc,omitempty" tf:"is_grpc,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the hostname will be rewritten to the target virtual deployment's DNS hostname.
+	IsHostRewriteEnabled *bool `json:"isHostRewriteEnabled,omitempty" tf:"is_host_rewrite_enabled,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the matched path prefix will be rewritten to '/' before being directed to the target virtual deployment.
+	IsPathRewriteEnabled *bool `json:"isPathRewriteEnabled,omitempty" tf:"is_path_rewrite_enabled,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Route to match
+	Path *string `json:"path,omitempty" tf:"path,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Match type for the route
+	PathType *string `json:"pathType,omitempty" tf:"path_type,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) The maximum duration in milliseconds for the upstream service to respond to a request.  If provided, the timeout value overrides the default timeout of 15 seconds for the HTTP based route rules, and disabled (no timeout) when 'isGrpc' is true.  The value 0 (zero) indicates that the timeout is disabled.  For streaming responses from the upstream service, consider either keeping the timeout disabled or set a sufficiently high value.
+	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
+
+	// (Updatable) Type of the traffic target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
 type RouteRulesParameters struct {
 
 	// (Updatable) The destination of the request.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Destinations []DestinationsParameters `json:"destinations" tf:"destinations,omitempty"`
 
 	// (Updatable) The ingress gateway host to which the route rule attaches. If not specified, the route rule gets attached to all hosts on the ingress gateway.
@@ -166,7 +344,7 @@ type RouteRulesParameters struct {
 	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
 
 	// (Updatable) Type of the traffic target.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Type *string `json:"type" tf:"type,omitempty"`
 }
 
@@ -174,6 +352,17 @@ type RouteRulesParameters struct {
 type IngressGatewayRouteTableSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     IngressGatewayRouteTableParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider IngressGatewayRouteTableInitParameters `json:"initProvider,omitempty"`
 }
 
 // IngressGatewayRouteTableStatus defines the observed state of IngressGatewayRouteTable.
@@ -183,19 +372,22 @@ type IngressGatewayRouteTableStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // IngressGatewayRouteTable is the Schema for the IngressGatewayRouteTables API. Provides the Ingress Gateway Route Table resource in Oracle Cloud Infrastructure Service Mesh service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type IngressGatewayRouteTable struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              IngressGatewayRouteTableSpec   `json:"spec"`
-	Status            IngressGatewayRouteTableStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.routeRules) || (has(self.initProvider) && has(self.initProvider.routeRules))",message="spec.forProvider.routeRules is a required parameter"
+	Spec   IngressGatewayRouteTableSpec   `json:"spec"`
+	Status IngressGatewayRouteTableStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

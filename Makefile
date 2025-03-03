@@ -4,14 +4,14 @@
 PROJECT_NAME := provider-oci
 PROJECT_REPO := github.com/oracle/$(PROJECT_NAME)
 
-export TERRAFORM_VERSION := 1.4.6
+export TERRAFORM_VERSION := 1.11.0
 
 export TERRAFORM_PROVIDER_SOURCE := oracle/oci
 export TERRAFORM_PROVIDER_REPO := https://github.com/oracle/terraform-provider-oci
-export TERRAFORM_PROVIDER_VERSION := 4.120.0
+export TERRAFORM_PROVIDER_VERSION := 6.28.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-oci
-export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-oci_v4.120.0
-export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://releases.hashicorp.com/terraform-provider-oci/4.120.0
+export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-oci_v6.28.0
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://releases.hashicorp.com/terraform-provider-oci/6.28.0
 export TERRAFORM_DOCS_PATH := website/docs/r
 
 export CROSSPLANE_PROVIDER_VERSION := 1.0
@@ -47,8 +47,8 @@ NPROCS ?= 1
 # to half the number of CPU cores.
 GO_TEST_PARALLEL := $(shell echo $$(( $(NPROCS) / 2 )))
 
-GO_REQUIRED_VERSION ?= 1.19
-GOLANGCILINT_VERSION ?= 1.50.0
+GO_REQUIRED_VERSION ?= 1.23
+GOLANGCILINT_VERSION ?= 1.64.6
 GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider $(GO_PROJECT)/cmd/generator
 GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
 GO_SUBDIRS += cmd internal apis
@@ -57,10 +57,10 @@ GO_SUBDIRS += cmd internal apis
 # ====================================================================================
 # Setup Kubernetes tools
 
-KIND_VERSION = v0.15.0
-UP_VERSION = v0.14.0
+KIND_VERSION = v0.27.0
+UP_VERSION = v0.37.0
 UP_CHANNEL = stable
-UPTEST_VERSION = v0.2.1
+UPTEST_VERSION = v1.3.0
 -include build/makelib/k8s_tools.mk
 
 # ====================================================================================

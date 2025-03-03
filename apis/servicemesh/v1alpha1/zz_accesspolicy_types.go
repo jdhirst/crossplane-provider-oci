@@ -13,7 +13,65 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type AccessPolicyInitParameters struct {
+
+	// (Updatable) The OCID of the compartment.
+	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// Reference to a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDRef *v1.Reference `json:"compartmentIdRef,omitempty" tf:"-"`
+
+	// Selector for a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDSelector *v1.Selector `json:"compartmentIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// The OCID of the service mesh in which this access policy is created.
+	// +crossplane:generate:reference:type=Mesh
+	MeshID *string `json:"meshId,omitempty" tf:"mesh_id,omitempty"`
+
+	// Reference to a Mesh to populate meshId.
+	// +kubebuilder:validation:Optional
+	MeshIDRef *v1.Reference `json:"meshIdRef,omitempty" tf:"-"`
+
+	// Selector for a Mesh to populate meshId.
+	// +kubebuilder:validation:Optional
+	MeshIDSelector *v1.Selector `json:"meshIdSelector,omitempty" tf:"-"`
+
+	// A user-friendly name. The name has to be unique within the same service mesh and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) List of applicable rules
+	Rules []RulesInitParameters `json:"rules,omitempty" tf:"rules,omitempty"`
+}
+
 type AccessPolicyObservation struct {
+
+	// (Updatable) The OCID of the compartment.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// Unique identifier that is immutable on creation.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -21,10 +79,20 @@ type AccessPolicyObservation struct {
 	// A message describing the current state in more detail. For example, can be used to provide actionable information for a resource in a Failed state.
 	LifecycleDetails *string `json:"lifecycleDetails,omitempty" tf:"lifecycle_details,omitempty"`
 
+	// The OCID of the service mesh in which this access policy is created.
+	MeshID *string `json:"meshId,omitempty" tf:"mesh_id,omitempty"`
+
+	// A user-friendly name. The name has to be unique within the same service mesh and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) List of applicable rules
+	Rules []RulesObservation `json:"rules,omitempty" tf:"rules,omitempty"`
+
 	// The current state of the Resource.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
 
 	// Usage of system tag keys. These predefined keys are scoped to namespaces. Example: {"orcl-cloud.free-tier-retained": "true"}
+	// +mapType=granular
 	SystemTags map[string]*string `json:"systemTags,omitempty" tf:"system_tags,omitempty"`
 
 	// The time when this resource was created in an RFC3339 formatted datetime string.
@@ -51,6 +119,7 @@ type AccessPolicyParameters struct {
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
@@ -59,6 +128,7 @@ type AccessPolicyParameters struct {
 
 	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// The OCID of the service mesh in which this access policy is created.
@@ -75,15 +145,69 @@ type AccessPolicyParameters struct {
 	MeshIDSelector *v1.Selector `json:"meshIdSelector,omitempty" tf:"-"`
 
 	// A user-friendly name. The name has to be unique within the same service mesh and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// (Updatable) List of applicable rules
-	// +kubebuilder:validation:Required
-	Rules []RulesParameters `json:"rules" tf:"rules,omitempty"`
+	// +kubebuilder:validation:Optional
+	Rules []RulesParameters `json:"rules,omitempty" tf:"rules,omitempty"`
+}
+
+type DestinationInitParameters struct {
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The hostnames of the external service. Only applicable for HTTP and HTTPS protocols. Wildcard hostnames are supported in the prefix form. Examples of valid hostnames are "www.example.com", ".example.com", ".com", "". Hostname "" can be used to allow all hosts.
+	Hostnames []*string `json:"hostnames,omitempty" tf:"hostnames,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The ipAddresses of the external service in CIDR notation. Only applicable for TCP protocol. All requests matching the given CIDR notation will pass through. In case a wildcard CIDR "0.0.0.0/0" is provided, the same port cannot be used for a virtual service communication.
+	IPAddresses []*string `json:"ipAddresses,omitempty" tf:"ip_addresses,omitempty"`
+
+	// (Updatable) The OCID of the ingress gateway resource.
+	// +crossplane:generate:reference:type=IngressGateway
+	IngressGatewayID *string `json:"ingressGatewayId,omitempty" tf:"ingress_gateway_id,omitempty"`
+
+	// Reference to a IngressGateway to populate ingressGatewayId.
+	// +kubebuilder:validation:Optional
+	IngressGatewayIDRef *v1.Reference `json:"ingressGatewayIdRef,omitempty" tf:"-"`
+
+	// Selector for a IngressGateway to populate ingressGatewayId.
+	// +kubebuilder:validation:Optional
+	IngressGatewayIDSelector *v1.Selector `json:"ingressGatewayIdSelector,omitempty" tf:"-"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Ports exposed by an external service. If left empty all ports will be allowed.
+	Ports []*float64 `json:"ports,omitempty" tf:"ports,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Protocol of the external service
+	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
+
+	// (Updatable) Traffic type of the target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+
+	// (Updatable) The OCID of the virtual service resource.
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
 }
 
 type DestinationObservation struct {
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The hostnames of the external service. Only applicable for HTTP and HTTPS protocols. Wildcard hostnames are supported in the prefix form. Examples of valid hostnames are "www.example.com", ".example.com", ".com", "". Hostname "" can be used to allow all hosts.
+	Hostnames []*string `json:"hostnames,omitempty" tf:"hostnames,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The ipAddresses of the external service in CIDR notation. Only applicable for TCP protocol. All requests matching the given CIDR notation will pass through. In case a wildcard CIDR "0.0.0.0/0" is provided, the same port cannot be used for a virtual service communication.
+	IPAddresses []*string `json:"ipAddresses,omitempty" tf:"ip_addresses,omitempty"`
+
+	// (Updatable) The OCID of the ingress gateway resource.
+	IngressGatewayID *string `json:"ingressGatewayId,omitempty" tf:"ingress_gateway_id,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Ports exposed by an external service. If left empty all ports will be allowed.
+	Ports []*float64 `json:"ports,omitempty" tf:"ports,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Protocol of the external service
+	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
+
+	// (Updatable) Traffic type of the target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+
+	// (Updatable) The OCID of the virtual service resource.
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
 }
 
 type DestinationParameters struct {
@@ -118,7 +242,7 @@ type DestinationParameters struct {
 	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
 
 	// (Updatable) Traffic type of the target.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Type *string `json:"type" tf:"type,omitempty"`
 
 	// (Updatable) The OCID of the virtual service resource.
@@ -126,25 +250,91 @@ type DestinationParameters struct {
 	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
 }
 
+type RulesInitParameters struct {
+
+	// (Updatable) Action for the traffic between the source and the destination.
+	Action *string `json:"action,omitempty" tf:"action,omitempty"`
+
+	// (Updatable) Target of the access policy. This can either be the source or the destination of the traffic.
+	Destination []DestinationInitParameters `json:"destination,omitempty" tf:"destination,omitempty"`
+
+	// (Updatable) Target of the access policy. This can either be the source or the destination of the traffic.
+	Source []SourceInitParameters `json:"source,omitempty" tf:"source,omitempty"`
+}
+
 type RulesObservation struct {
+
+	// (Updatable) Action for the traffic between the source and the destination.
+	Action *string `json:"action,omitempty" tf:"action,omitempty"`
+
+	// (Updatable) Target of the access policy. This can either be the source or the destination of the traffic.
+	Destination []DestinationObservation `json:"destination,omitempty" tf:"destination,omitempty"`
+
+	// (Updatable) Target of the access policy. This can either be the source or the destination of the traffic.
+	Source []SourceObservation `json:"source,omitempty" tf:"source,omitempty"`
 }
 
 type RulesParameters struct {
 
 	// (Updatable) Action for the traffic between the source and the destination.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Action *string `json:"action" tf:"action,omitempty"`
 
 	// (Updatable) Target of the access policy. This can either be the source or the destination of the traffic.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Destination []DestinationParameters `json:"destination" tf:"destination,omitempty"`
 
 	// (Updatable) Target of the access policy. This can either be the source or the destination of the traffic.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Source []SourceParameters `json:"source" tf:"source,omitempty"`
 }
 
+type SourceInitParameters struct {
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The hostnames of the external service. Only applicable for HTTP and HTTPS protocols. Wildcard hostnames are supported in the prefix form. Examples of valid hostnames are "www.example.com", ".example.com", ".com", "". Hostname "" can be used to allow all hosts.
+	Hostnames []*string `json:"hostnames,omitempty" tf:"hostnames,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The ipAddresses of the external service in CIDR notation. Only applicable for TCP protocol. All requests matching the given CIDR notation will pass through. In case a wildcard CIDR "0.0.0.0/0" is provided, the same port cannot be used for a virtual service communication.
+	IPAddresses []*string `json:"ipAddresses,omitempty" tf:"ip_addresses,omitempty"`
+
+	// (Updatable) The OCID of the ingress gateway resource.
+	IngressGatewayID *string `json:"ingressGatewayId,omitempty" tf:"ingress_gateway_id,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Ports exposed by an external service. If left empty all ports will be allowed.
+	Ports []*float64 `json:"ports,omitempty" tf:"ports,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Protocol of the external service
+	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
+
+	// (Updatable) Traffic type of the target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+
+	// (Updatable) The OCID of the virtual service resource.
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
+}
+
 type SourceObservation struct {
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The hostnames of the external service. Only applicable for HTTP and HTTPS protocols. Wildcard hostnames are supported in the prefix form. Examples of valid hostnames are "www.example.com", ".example.com", ".com", "". Hostname "" can be used to allow all hosts.
+	Hostnames []*string `json:"hostnames,omitempty" tf:"hostnames,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) The ipAddresses of the external service in CIDR notation. Only applicable for TCP protocol. All requests matching the given CIDR notation will pass through. In case a wildcard CIDR "0.0.0.0/0" is provided, the same port cannot be used for a virtual service communication.
+	IPAddresses []*string `json:"ipAddresses,omitempty" tf:"ip_addresses,omitempty"`
+
+	// (Updatable) The OCID of the ingress gateway resource.
+	IngressGatewayID *string `json:"ingressGatewayId,omitempty" tf:"ingress_gateway_id,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Ports exposed by an external service. If left empty all ports will be allowed.
+	Ports []*float64 `json:"ports,omitempty" tf:"ports,omitempty"`
+
+	// (Applicable when type=EXTERNAL_SERVICE) (Updatable) Protocol of the external service
+	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
+
+	// (Updatable) Traffic type of the target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+
+	// (Updatable) The OCID of the virtual service resource.
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
 }
 
 type SourceParameters struct {
@@ -170,7 +360,7 @@ type SourceParameters struct {
 	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
 
 	// (Updatable) Traffic type of the target.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Type *string `json:"type" tf:"type,omitempty"`
 
 	// (Updatable) The OCID of the virtual service resource.
@@ -182,6 +372,17 @@ type SourceParameters struct {
 type AccessPolicySpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     AccessPolicyParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider AccessPolicyInitParameters `json:"initProvider,omitempty"`
 }
 
 // AccessPolicyStatus defines the observed state of AccessPolicy.
@@ -191,19 +392,22 @@ type AccessPolicyStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // AccessPolicy is the Schema for the AccessPolicys API. Provides the Access Policy resource in Oracle Cloud Infrastructure Service Mesh service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type AccessPolicy struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              AccessPolicySpec   `json:"spec"`
-	Status            AccessPolicyStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.rules) || (has(self.initProvider) && has(self.initProvider.rules))",message="spec.forProvider.rules is a required parameter"
+	Spec   AccessPolicySpec   `json:"spec"`
+	Status AccessPolicyStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

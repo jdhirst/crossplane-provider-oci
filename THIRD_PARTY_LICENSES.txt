@@ -1,7 +1,7 @@
 === Public License Template ===
 # upjet Provider Template 
-github.com/upbound/upjet-provider-template
-github.com/upbound/upjet/pkg
+github.com/crossplane/upjet-provider-template
+github.com/crossplane/upjet/pkg
 
 Copyright 2022 Upbound Inc. All rights reserved.
 Copyright 2023 Upbound Inc. All rights reserved.

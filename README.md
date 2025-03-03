@@ -1,6 +1,6 @@
 # Crossplane Provider for Oracle Cloud Infrastructure
 
-`crossplane-provider-oci` is a [Crossplane](https://crossplane.io/) provider for [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/) (OCI) that is built using [Upjet](https://github.com/upbound/upjet) code generation tools.
+`crossplane-provider-oci` is a [Crossplane](https://crossplane.io/) provider for [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/) (OCI) that is built using [Upjet](https://github.com/crossplane/upjet) code generation tools.
 
 Upjet creates XRM-conformant managed resources for the OCI APIs based on [OCI Terraform Resources](https://registry.terraform.io/providers/oracle/oci/latest/docs).
 

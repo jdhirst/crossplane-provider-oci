@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Upbound Inc.
+Copyright 2022 Upbound Inc.
 */
 
 package controller
@@ -7,7 +7,7 @@ package controller
 import (
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	"github.com/upbound/upjet/pkg/controller"
+	"github.com/crossplane/upjet/pkg/controller"
 
 	containerconfiguration "github.com/oracle/provider-oci/internal/controller/artifacts/containerconfiguration"
 	containerrepository "github.com/oracle/provider-oci/internal/controller/artifacts/containerrepository"

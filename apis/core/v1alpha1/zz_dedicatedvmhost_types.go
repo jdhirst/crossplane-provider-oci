@@ -13,7 +13,56 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type DedicatedVMHostInitParameters struct {
+
+	// The availability domain of the dedicated virtual machine host.  Example: Uocm:PHX-AD-1
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
+
+	// (Updatable) The OCID of the compartment.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// The dedicated virtual machine host shape. The shape determines the number of CPUs and other resources available for VM instances launched on the dedicated virtual machine host.
+	DedicatedVMHostShape *string `json:"dedicatedVmHostShape,omitempty" tf:"dedicated_vm_host_shape,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// The fault domain for the dedicated virtual machine host's assigned instances. For more information, see Fault Domains. If you do not specify the fault domain, the system selects one for you. To change the fault domain for a dedicated virtual machine host, delete it and create a new dedicated virtual machine host in the preferred fault domain.
+	FaultDomain *string `json:"faultDomain,omitempty" tf:"fault_domain,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+}
+
 type DedicatedVMHostObservation struct {
+
+	// The availability domain of the dedicated virtual machine host.  Example: Uocm:PHX-AD-1
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
+
+	// (Updatable) The OCID of the compartment.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// The dedicated virtual machine host shape. The shape determines the number of CPUs and other resources available for VM instances launched on the dedicated virtual machine host.
+	DedicatedVMHostShape *string `json:"dedicatedVmHostShape,omitempty" tf:"dedicated_vm_host_shape,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// The fault domain for the dedicated virtual machine host's assigned instances. For more information, see Fault Domains. If you do not specify the fault domain, the system selects one for you. To change the fault domain for a dedicated virtual machine host, delete it and create a new dedicated virtual machine host in the preferred fault domain.
+	FaultDomain *string `json:"faultDomain,omitempty" tf:"fault_domain,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// The OCID of the dedicated VM host.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -40,19 +89,20 @@ type DedicatedVMHostObservation struct {
 type DedicatedVMHostParameters struct {
 
 	// The availability domain of the dedicated virtual machine host.  Example: Uocm:PHX-AD-1
-	// +kubebuilder:validation:Required
-	AvailabilityDomain *string `json:"availabilityDomain" tf:"availability_domain,omitempty"`
+	// +kubebuilder:validation:Optional
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
 
 	// (Updatable) The OCID of the compartment.
-	// +kubebuilder:validation:Required
-	CompartmentID *string `json:"compartmentId" tf:"compartment_id,omitempty"`
+	// +kubebuilder:validation:Optional
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
 
 	// The dedicated virtual machine host shape. The shape determines the number of CPUs and other resources available for VM instances launched on the dedicated virtual machine host.
-	// +kubebuilder:validation:Required
-	DedicatedVMHostShape *string `json:"dedicatedVmHostShape" tf:"dedicated_vm_host_shape,omitempty"`
+	// +kubebuilder:validation:Optional
+	DedicatedVMHostShape *string `json:"dedicatedVmHostShape,omitempty" tf:"dedicated_vm_host_shape,omitempty"`
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
@@ -65,6 +115,7 @@ type DedicatedVMHostParameters struct {
 
 	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 }
 
@@ -72,6 +123,17 @@ type DedicatedVMHostParameters struct {
 type DedicatedVMHostSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     DedicatedVMHostParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider DedicatedVMHostInitParameters `json:"initProvider,omitempty"`
 }
 
 // DedicatedVMHostStatus defines the observed state of DedicatedVMHost.
@@ -81,19 +143,23 @@ type DedicatedVMHostStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // DedicatedVMHost is the Schema for the DedicatedVMHosts API. Provides the Dedicated Vm Host resource in Oracle Cloud Infrastructure Core service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type DedicatedVMHost struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              DedicatedVMHostSpec   `json:"spec"`
-	Status            DedicatedVMHostStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.availabilityDomain) || (has(self.initProvider) && has(self.initProvider.availabilityDomain))",message="spec.forProvider.availabilityDomain is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.compartmentId) || (has(self.initProvider) && has(self.initProvider.compartmentId))",message="spec.forProvider.compartmentId is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.dedicatedVmHostShape) || (has(self.initProvider) && has(self.initProvider.dedicatedVmHostShape))",message="spec.forProvider.dedicatedVmHostShape is a required parameter"
+	Spec   DedicatedVMHostSpec   `json:"spec"`
+	Status DedicatedVMHostStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

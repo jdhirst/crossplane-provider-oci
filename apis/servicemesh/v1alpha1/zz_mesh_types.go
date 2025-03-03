@@ -13,27 +13,100 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type CertificateAuthoritiesInitParameters struct {
+
+	// The OCID of the certificate authority resource.
+	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+}
+
 type CertificateAuthoritiesObservation struct {
+
+	// The OCID of the certificate authority resource.
+	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 }
 
 type CertificateAuthoritiesParameters struct {
 
 	// The OCID of the certificate authority resource.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	ID *string `json:"id" tf:"id,omitempty"`
 }
 
+type MeshInitParameters struct {
+
+	// The OCID of the certificate authority resource OCID to use for creating leaf certificates.
+	CertificateAuthorities []CertificateAuthoritiesInitParameters `json:"certificateAuthorities,omitempty" tf:"certificate_authorities,omitempty"`
+
+	// (Updatable) The OCID of the compartment.
+	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// Reference to a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDRef *v1.Reference `json:"compartmentIdRef,omitempty" tf:"-"`
+
+	// Selector for a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDSelector *v1.Selector `json:"compartmentIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) A user-friendly name. The name does not have to be unique and can be changed after creation. Avoid entering confidential information.  Example: My new resource
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// (Updatable) Sets a minimum level of mTLS authentication for all virtual services within the mesh.
+	Mtls []MeshMtlsInitParameters `json:"mtls,omitempty" tf:"mtls,omitempty"`
+}
+
+type MeshMtlsInitParameters struct {
+
+	// (Updatable) DISABLED: No minimum virtual services within this mesh can use any mTLS authentication mode. PERMISSIVE: Virtual services within this mesh can use either PERMISSIVE or STRICT modes. STRICT: All virtual services within this mesh must use STRICT mode.
+	Minimum *string `json:"minimum,omitempty" tf:"minimum,omitempty"`
+}
+
 type MeshMtlsObservation struct {
+
+	// (Updatable) DISABLED: No minimum virtual services within this mesh can use any mTLS authentication mode. PERMISSIVE: Virtual services within this mesh can use either PERMISSIVE or STRICT modes. STRICT: All virtual services within this mesh must use STRICT mode.
+	Minimum *string `json:"minimum,omitempty" tf:"minimum,omitempty"`
 }
 
 type MeshMtlsParameters struct {
 
 	// (Updatable) DISABLED: No minimum virtual services within this mesh can use any mTLS authentication mode. PERMISSIVE: Virtual services within this mesh can use either PERMISSIVE or STRICT modes. STRICT: All virtual services within this mesh must use STRICT mode.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Minimum *string `json:"minimum" tf:"minimum,omitempty"`
 }
 
 type MeshObservation struct {
+
+	// The OCID of the certificate authority resource OCID to use for creating leaf certificates.
+	CertificateAuthorities []CertificateAuthoritiesObservation `json:"certificateAuthorities,omitempty" tf:"certificate_authorities,omitempty"`
+
+	// (Updatable) The OCID of the compartment.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) A user-friendly name. The name does not have to be unique and can be changed after creation. Avoid entering confidential information.  Example: My new resource
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// The OCID of the certificate authority resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -41,10 +114,14 @@ type MeshObservation struct {
 	// A message describing the current state in more detail. For example, can be used to provide actionable information for a resource in a Failed state.
 	LifecycleDetails *string `json:"lifecycleDetails,omitempty" tf:"lifecycle_details,omitempty"`
 
+	// (Updatable) Sets a minimum level of mTLS authentication for all virtual services within the mesh.
+	Mtls []MeshMtlsObservation `json:"mtls,omitempty" tf:"mtls,omitempty"`
+
 	// The current state of the Resource.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
 
 	// Usage of system tag keys. These predefined keys are scoped to namespaces. Example: {"orcl-cloud.free-tier-retained": "true"}
+	// +mapType=granular
 	SystemTags map[string]*string `json:"systemTags,omitempty" tf:"system_tags,omitempty"`
 
 	// The time when this resource was created in an RFC3339 formatted datetime string.
@@ -57,8 +134,8 @@ type MeshObservation struct {
 type MeshParameters struct {
 
 	// The OCID of the certificate authority resource OCID to use for creating leaf certificates.
-	// +kubebuilder:validation:Required
-	CertificateAuthorities []CertificateAuthoritiesParameters `json:"certificateAuthorities" tf:"certificate_authorities,omitempty"`
+	// +kubebuilder:validation:Optional
+	CertificateAuthorities []CertificateAuthoritiesParameters `json:"certificateAuthorities,omitempty" tf:"certificate_authorities,omitempty"`
 
 	// (Updatable) The OCID of the compartment.
 	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
@@ -75,6 +152,7 @@ type MeshParameters struct {
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
@@ -82,11 +160,12 @@ type MeshParameters struct {
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
 	// (Updatable) A user-friendly name. The name does not have to be unique and can be changed after creation. Avoid entering confidential information.  Example: My new resource
-	// +kubebuilder:validation:Required
-	DisplayName *string `json:"displayName" tf:"display_name,omitempty"`
+	// +kubebuilder:validation:Optional
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
 
 	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// (Updatable) Sets a minimum level of mTLS authentication for all virtual services within the mesh.
@@ -98,6 +177,17 @@ type MeshParameters struct {
 type MeshSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     MeshParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider MeshInitParameters `json:"initProvider,omitempty"`
 }
 
 // MeshStatus defines the observed state of Mesh.
@@ -107,19 +197,22 @@ type MeshStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // Mesh is the Schema for the Meshs API. Provides the Mesh resource in Oracle Cloud Infrastructure Service Mesh service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type Mesh struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MeshSpec   `json:"spec"`
-	Status            MeshStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.certificateAuthorities) || (has(self.initProvider) && has(self.initProvider.certificateAuthorities))",message="spec.forProvider.certificateAuthorities is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.displayName) || (has(self.initProvider) && has(self.initProvider.displayName))",message="spec.forProvider.displayName is a required parameter"
+	Spec   MeshSpec   `json:"spec"`
+	Status MeshStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

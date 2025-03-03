@@ -13,20 +13,94 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type ClusterConfigurationInitParameters struct {
+
+	// The OCID of the HPC island.
+	HpcIslandID *string `json:"hpcIslandId,omitempty" tf:"hpc_island_id,omitempty"`
+
+	// The list of network block OCIDs.
+	NetworkBlockIds []*string `json:"networkBlockIds,omitempty" tf:"network_block_ids,omitempty"`
+}
+
+type ClusterConfigurationObservation struct {
+
+	// The OCID of the HPC island.
+	HpcIslandID *string `json:"hpcIslandId,omitempty" tf:"hpc_island_id,omitempty"`
+
+	// The list of network block OCIDs.
+	NetworkBlockIds []*string `json:"networkBlockIds,omitempty" tf:"network_block_ids,omitempty"`
+}
+
+type ClusterConfigurationParameters struct {
+
+	// The OCID of the HPC island.
+	// +kubebuilder:validation:Optional
+	HpcIslandID *string `json:"hpcIslandId" tf:"hpc_island_id,omitempty"`
+
+	// The list of network block OCIDs.
+	// +kubebuilder:validation:Optional
+	NetworkBlockIds []*string `json:"networkBlockIds,omitempty" tf:"network_block_ids,omitempty"`
+}
+
+type ClusterNetworkInitParameters struct {
+
+	// The HPC cluster configuration requested when launching instances of a cluster network.
+	ClusterConfiguration []ClusterConfigurationInitParameters `json:"clusterConfiguration,omitempty" tf:"cluster_configuration,omitempty"`
+
+	// (Updatable) The OCID of the compartment containing the cluster network.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// (Updatable) The data to create the instance pools in the cluster network.
+	InstancePools []InstancePoolsInitParameters `json:"instancePools,omitempty" tf:"instance_pools,omitempty"`
+
+	// The location for where the instance pools in a cluster network will place instances.
+	PlacementConfiguration []PlacementConfigurationInitParameters `json:"placementConfiguration,omitempty" tf:"placement_configuration,omitempty"`
+}
+
 type ClusterNetworkObservation struct {
 
-	// The OCID of the hpc island used by the cluster network.
+	// The HPC cluster configuration requested when launching instances of a cluster network.
+	ClusterConfiguration []ClusterConfigurationObservation `json:"clusterConfiguration,omitempty" tf:"cluster_configuration,omitempty"`
+
+	// (Updatable) The OCID of the compartment containing the cluster network.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// The OCID of the HPC island.
 	HpcIslandID *string `json:"hpcIslandId,omitempty" tf:"hpc_island_id,omitempty"`
 
 	// The OCID of the cluster network.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// (Updatable) The data to create the instance pools in the cluster network.
-	// +kubebuilder:validation:Required
 	InstancePools []InstancePoolsObservation `json:"instancePools,omitempty" tf:"instance_pools,omitempty"`
 
-	// The list of network block OCIDs of the HPC island.
+	// The list of network block OCIDs.
 	NetworkBlockIds []*string `json:"networkBlockIds,omitempty" tf:"network_block_ids,omitempty"`
+
+	// The location for where the instance pools in a cluster network will place instances.
+	PlacementConfiguration []PlacementConfigurationObservation `json:"placementConfiguration,omitempty" tf:"placement_configuration,omitempty"`
 
 	// The status of the interaction between the instance pool and the load balancer.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
@@ -40,12 +114,17 @@ type ClusterNetworkObservation struct {
 
 type ClusterNetworkParameters struct {
 
+	// The HPC cluster configuration requested when launching instances of a cluster network.
+	// +kubebuilder:validation:Optional
+	ClusterConfiguration []ClusterConfigurationParameters `json:"clusterConfiguration,omitempty" tf:"cluster_configuration,omitempty"`
+
 	// (Updatable) The OCID of the compartment containing the cluster network.
-	// +kubebuilder:validation:Required
-	CompartmentID *string `json:"compartmentId" tf:"compartment_id,omitempty"`
+	// +kubebuilder:validation:Optional
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
@@ -54,15 +133,36 @@ type ClusterNetworkParameters struct {
 
 	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// (Updatable) The data to create the instance pools in the cluster network.
-	// +kubebuilder:validation:Required
-	InstancePools []InstancePoolsParameters `json:"instancePools" tf:"instance_pools,omitempty"`
+	// +kubebuilder:validation:Optional
+	InstancePools []InstancePoolsParameters `json:"instancePools,omitempty" tf:"instance_pools,omitempty"`
 
 	// The location for where the instance pools in a cluster network will place instances.
-	// +kubebuilder:validation:Required
-	PlacementConfiguration []PlacementConfigurationParameters `json:"placementConfiguration" tf:"placement_configuration,omitempty"`
+	// +kubebuilder:validation:Optional
+	PlacementConfiguration []PlacementConfigurationParameters `json:"placementConfiguration,omitempty" tf:"placement_configuration,omitempty"`
+}
+
+type InstancePoolsInitParameters struct {
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// (Updatable) The OCID of the instance configuration associated with the instance pool.
+	InstanceConfigurationID *string `json:"instanceConfigurationId,omitempty" tf:"instance_configuration_id,omitempty"`
+
+	// (Updatable) The number of instances that should be in the instance pool.
+	Size *float64 `json:"size,omitempty" tf:"size,omitempty"`
 }
 
 type InstancePoolsObservation struct {
@@ -70,14 +170,35 @@ type InstancePoolsObservation struct {
 	// (Updatable) The OCID of the compartment containing the cluster network.
 	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
 
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
 	// The OCID of the cluster network.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+
+	// (Updatable) The OCID of the instance configuration associated with the instance pool.
+	InstanceConfigurationID *string `json:"instanceConfigurationId,omitempty" tf:"instance_configuration_id,omitempty"`
+
+	InstanceDisplayNameFormatter *string `json:"instanceDisplayNameFormatter,omitempty" tf:"instance_display_name_formatter,omitempty"`
+
+	InstanceHostnameFormatter *string `json:"instanceHostnameFormatter,omitempty" tf:"instance_hostname_formatter,omitempty"`
 
 	// The load balancers attached to the instance pool.
 	LoadBalancers []LoadBalancersObservation `json:"loadBalancers,omitempty" tf:"load_balancers,omitempty"`
 
 	// The placement configurations for the instance pool.
 	PlacementConfigurations []PlacementConfigurationsObservation `json:"placementConfigurations,omitempty" tf:"placement_configurations,omitempty"`
+
+	// (Updatable) The number of instances that should be in the instance pool.
+	Size *float64 `json:"size,omitempty" tf:"size,omitempty"`
 
 	// The status of the interaction between the instance pool and the load balancer.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
@@ -90,6 +211,7 @@ type InstancePoolsParameters struct {
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see Resource Tags.  Example: {"Operations.CostCenter": "42"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
@@ -98,15 +220,31 @@ type InstancePoolsParameters struct {
 
 	// (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see Resource Tags.  Example: {"Department": "Finance"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// (Updatable) The OCID of the instance configuration associated with the instance pool.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	InstanceConfigurationID *string `json:"instanceConfigurationId" tf:"instance_configuration_id,omitempty"`
 
 	// (Updatable) The number of instances that should be in the instance pool.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Size *float64 `json:"size" tf:"size,omitempty"`
+}
+
+type Ipv6AddressIpv6SubnetCidrPairDetailsInitParameters struct {
+}
+
+type Ipv6AddressIpv6SubnetCidrPairDetailsObservation struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
+type Ipv6AddressIpv6SubnetCidrPairDetailsParameters struct {
+}
+
+type LoadBalancersInitParameters struct {
 }
 
 type LoadBalancersObservation struct {
@@ -136,25 +274,148 @@ type LoadBalancersObservation struct {
 type LoadBalancersParameters struct {
 }
 
+type PlacementConfigurationInitParameters struct {
+
+	// The availability domain to place instances.  Example: Uocm:PHX-AD-1
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
+
+	PlacementConstraint *string `json:"placementConstraint,omitempty" tf:"placement_constraint,omitempty"`
+
+	// The OCID of the primary subnet to place instances. This field is deprecated. Use primaryVnicSubnets instead to set VNIC data for instances in the pool.
+	PrimarySubnetID *string `json:"primarySubnetId,omitempty" tf:"primary_subnet_id,omitempty"`
+
+	// Details about the IPv6 primary subnet.
+	PrimaryVnicSubnets []PlacementConfigurationPrimaryVnicSubnetsInitParameters `json:"primaryVnicSubnets,omitempty" tf:"primary_vnic_subnets,omitempty"`
+
+	// The set of secondary VNIC data for instances in the pool.
+	SecondaryVnicSubnets []PlacementConfigurationSecondaryVnicSubnetsInitParameters `json:"secondaryVnicSubnets,omitempty" tf:"secondary_vnic_subnets,omitempty"`
+}
+
 type PlacementConfigurationObservation struct {
+
+	// The availability domain to place instances.  Example: Uocm:PHX-AD-1
+	AvailabilityDomain *string `json:"availabilityDomain,omitempty" tf:"availability_domain,omitempty"`
+
+	PlacementConstraint *string `json:"placementConstraint,omitempty" tf:"placement_constraint,omitempty"`
+
+	// The OCID of the primary subnet to place instances. This field is deprecated. Use primaryVnicSubnets instead to set VNIC data for instances in the pool.
+	PrimarySubnetID *string `json:"primarySubnetId,omitempty" tf:"primary_subnet_id,omitempty"`
+
+	// Details about the IPv6 primary subnet.
+	PrimaryVnicSubnets []PlacementConfigurationPrimaryVnicSubnetsObservation `json:"primaryVnicSubnets,omitempty" tf:"primary_vnic_subnets,omitempty"`
+
+	// The set of secondary VNIC data for instances in the pool.
+	SecondaryVnicSubnets []PlacementConfigurationSecondaryVnicSubnetsObservation `json:"secondaryVnicSubnets,omitempty" tf:"secondary_vnic_subnets,omitempty"`
 }
 
 type PlacementConfigurationParameters struct {
 
 	// The availability domain to place instances.  Example: Uocm:PHX-AD-1
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	AvailabilityDomain *string `json:"availabilityDomain" tf:"availability_domain,omitempty"`
 
-	// The OCID of the primary subnet to place instances.
-	// +kubebuilder:validation:Required
-	PrimarySubnetID *string `json:"primarySubnetId" tf:"primary_subnet_id,omitempty"`
+	// +kubebuilder:validation:Optional
+	PlacementConstraint *string `json:"placementConstraint,omitempty" tf:"placement_constraint,omitempty"`
+
+	// The OCID of the primary subnet to place instances. This field is deprecated. Use primaryVnicSubnets instead to set VNIC data for instances in the pool.
+	// +kubebuilder:validation:Optional
+	PrimarySubnetID *string `json:"primarySubnetId,omitempty" tf:"primary_subnet_id,omitempty"`
+
+	// Details about the IPv6 primary subnet.
+	// +kubebuilder:validation:Optional
+	PrimaryVnicSubnets []PlacementConfigurationPrimaryVnicSubnetsParameters `json:"primaryVnicSubnets,omitempty" tf:"primary_vnic_subnets,omitempty"`
 
 	// The set of secondary VNIC data for instances in the pool.
 	// +kubebuilder:validation:Optional
 	SecondaryVnicSubnets []PlacementConfigurationSecondaryVnicSubnetsParameters `json:"secondaryVnicSubnets,omitempty" tf:"secondary_vnic_subnets,omitempty"`
 }
 
+type PlacementConfigurationPrimaryVnicSubnetsInitParameters struct {
+
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	Ipv6AddressIpv6SubnetCidrPairDetails []PrimaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsInitParameters `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
+
+	// The subnet OCID for the secondary VNIC.
+	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
+}
+
+type PlacementConfigurationPrimaryVnicSubnetsObservation struct {
+
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	Ipv6AddressIpv6SubnetCidrPairDetails []PrimaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsObservation `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
+
+	// The subnet OCID for the secondary VNIC.
+	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
+}
+
+type PlacementConfigurationPrimaryVnicSubnetsParameters struct {
+
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	// +kubebuilder:validation:Optional
+	Ipv6AddressIpv6SubnetCidrPairDetails []PrimaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsParameters `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	// +kubebuilder:validation:Optional
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
+
+	// The subnet OCID for the secondary VNIC.
+	// +kubebuilder:validation:Optional
+	SubnetID *string `json:"subnetId" tf:"subnet_id,omitempty"`
+}
+
+type PlacementConfigurationSecondaryVnicSubnetsInitParameters struct {
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	Ipv6AddressIpv6SubnetCidrPairDetails []PlacementConfigurationSecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsInitParameters `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
+
+	// The subnet OCID for the secondary VNIC.
+	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
+}
+
+type PlacementConfigurationSecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsInitParameters struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
+type PlacementConfigurationSecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsObservation struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
+type PlacementConfigurationSecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsParameters struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	// +kubebuilder:validation:Optional
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
 type PlacementConfigurationSecondaryVnicSubnetsObservation struct {
+
+	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
+	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	Ipv6AddressIpv6SubnetCidrPairDetails []PlacementConfigurationSecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsObservation `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
+
+	// The subnet OCID for the secondary VNIC.
+	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
 }
 
 type PlacementConfigurationSecondaryVnicSubnetsParameters struct {
@@ -163,9 +424,20 @@ type PlacementConfigurationSecondaryVnicSubnetsParameters struct {
 	// +kubebuilder:validation:Optional
 	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
 
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	// +kubebuilder:validation:Optional
+	Ipv6AddressIpv6SubnetCidrPairDetails []PlacementConfigurationSecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsParameters `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	// +kubebuilder:validation:Optional
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
+
 	// The subnet OCID for the secondary VNIC.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	SubnetID *string `json:"subnetId" tf:"subnet_id,omitempty"`
+}
+
+type PlacementConfigurationsInitParameters struct {
 }
 
 type PlacementConfigurationsObservation struct {
@@ -176,8 +448,11 @@ type PlacementConfigurationsObservation struct {
 	// The fault domains to place instances.
 	FaultDomains []*string `json:"faultDomains,omitempty" tf:"fault_domains,omitempty"`
 
-	// The OCID of the primary subnet to place instances.
+	// The OCID of the primary subnet to place instances. This field is deprecated. Use primaryVnicSubnets instead to set VNIC data for instances in the pool.
 	PrimarySubnetID *string `json:"primarySubnetId,omitempty" tf:"primary_subnet_id,omitempty"`
+
+	// Details about the IPv6 primary subnet.
+	PrimaryVnicSubnets []PrimaryVnicSubnetsObservation `json:"primaryVnicSubnets,omitempty" tf:"primary_vnic_subnets,omitempty"`
 
 	// The set of secondary VNIC data for instances in the pool.
 	SecondaryVnicSubnets []SecondaryVnicSubnetsObservation `json:"secondaryVnicSubnets,omitempty" tf:"secondary_vnic_subnets,omitempty"`
@@ -186,10 +461,68 @@ type PlacementConfigurationsObservation struct {
 type PlacementConfigurationsParameters struct {
 }
 
+type PrimaryVnicSubnetsInitParameters struct {
+}
+
+type PrimaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsInitParameters struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
+type PrimaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsObservation struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
+type PrimaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsParameters struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	// +kubebuilder:validation:Optional
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
+type PrimaryVnicSubnetsObservation struct {
+
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	Ipv6AddressIpv6SubnetCidrPairDetails []Ipv6AddressIpv6SubnetCidrPairDetailsObservation `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
+
+	// The subnet OCID for the secondary VNIC.
+	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
+}
+
+type PrimaryVnicSubnetsParameters struct {
+}
+
+type SecondaryVnicSubnetsInitParameters struct {
+}
+
+type SecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsInitParameters struct {
+}
+
+type SecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsObservation struct {
+
+	// Optional. Used to disambiguate which subnet prefix should be used to create an IPv6 allocation.
+	Ipv6SubnetCidr *string `json:"ipv6subnetCidr,omitempty" tf:"ipv6subnet_cidr,omitempty"`
+}
+
+type SecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsParameters struct {
+}
+
 type SecondaryVnicSubnetsObservation struct {
 
 	// (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information.
 	DisplayName *string `json:"displayName,omitempty" tf:"display_name,omitempty"`
+
+	// A list of IPv6 prefix ranges from which the VNIC should be assigned an IPv6 address. You can provide only the prefix ranges and Oracle Cloud Infrastructure will select an available address from the range. You can optionally choose to leave the prefix range empty and instead provide the specific IPv6 address that should be used from within that range.
+	Ipv6AddressIpv6SubnetCidrPairDetails []SecondaryVnicSubnetsIpv6AddressIpv6SubnetCidrPairDetailsObservation `json:"ipv6addressIpv6SubnetCidrPairDetails,omitempty" tf:"ipv6address_ipv6subnet_cidr_pair_details,omitempty"`
+
+	// Whether to allocate an IPv6 address at instance and VNIC creation from an IPv6 enabled subnet. Default: False. When provided you may optionally provide an IPv6 prefix (ipv6SubnetCidr) of your choice to assign the IPv6 address from. If ipv6SubnetCidr is not provided then an IPv6 prefix is chosen for you.
+	IsAssignIpv6Ip *bool `json:"isAssignIpv6Ip,omitempty" tf:"is_assign_ipv6ip,omitempty"`
 
 	// The subnet OCID for the secondary VNIC.
 	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
@@ -202,6 +535,17 @@ type SecondaryVnicSubnetsParameters struct {
 type ClusterNetworkSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     ClusterNetworkParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider ClusterNetworkInitParameters `json:"initProvider,omitempty"`
 }
 
 // ClusterNetworkStatus defines the observed state of ClusterNetwork.
@@ -211,19 +555,23 @@ type ClusterNetworkStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // ClusterNetwork is the Schema for the ClusterNetworks API. Provides the Cluster Network resource in Oracle Cloud Infrastructure Core service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type ClusterNetwork struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ClusterNetworkSpec   `json:"spec"`
-	Status            ClusterNetworkStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.compartmentId) || (has(self.initProvider) && has(self.initProvider.compartmentId))",message="spec.forProvider.compartmentId is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.instancePools) || (has(self.initProvider) && has(self.initProvider.instancePools))",message="spec.forProvider.instancePools is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.placementConfiguration) || (has(self.initProvider) && has(self.initProvider.placementConfiguration))",message="spec.forProvider.placementConfiguration is a required parameter"
+	Spec   ClusterNetworkSpec   `json:"spec"`
+	Status ClusterNetworkStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

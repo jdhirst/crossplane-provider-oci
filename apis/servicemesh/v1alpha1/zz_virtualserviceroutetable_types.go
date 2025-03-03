@@ -13,7 +13,37 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type RouteRulesDestinationsInitParameters struct {
+
+	// (Updatable) Port on virtual deployment to target. If port is missing, the rule will target all ports on the virtual deployment.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+
+	// (Updatable) The OCID of the virtual deployment where the request will be routed.
+	// +crossplane:generate:reference:type=VirtualDeployment
+	VirtualDeploymentID *string `json:"virtualDeploymentId,omitempty" tf:"virtual_deployment_id,omitempty"`
+
+	// Reference to a VirtualDeployment to populate virtualDeploymentId.
+	// +kubebuilder:validation:Optional
+	VirtualDeploymentIDRef *v1.Reference `json:"virtualDeploymentIdRef,omitempty" tf:"-"`
+
+	// Selector for a VirtualDeployment to populate virtualDeploymentId.
+	// +kubebuilder:validation:Optional
+	VirtualDeploymentIDSelector *v1.Selector `json:"virtualDeploymentIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Weight of traffic target.
+	Weight *float64 `json:"weight,omitempty" tf:"weight,omitempty"`
+}
+
 type RouteRulesDestinationsObservation struct {
+
+	// (Updatable) Port on virtual deployment to target. If port is missing, the rule will target all ports on the virtual deployment.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+
+	// (Updatable) The OCID of the virtual deployment where the request will be routed.
+	VirtualDeploymentID *string `json:"virtualDeploymentId,omitempty" tf:"virtual_deployment_id,omitempty"`
+
+	// (Updatable) Weight of traffic target.
+	Weight *float64 `json:"weight,omitempty" tf:"weight,omitempty"`
 }
 
 type RouteRulesDestinationsParameters struct {
@@ -36,11 +66,72 @@ type RouteRulesDestinationsParameters struct {
 	VirtualDeploymentIDSelector *v1.Selector `json:"virtualDeploymentIdSelector,omitempty" tf:"-"`
 
 	// (Updatable) Weight of traffic target.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Weight *float64 `json:"weight" tf:"weight,omitempty"`
 }
 
+type VirtualServiceRouteTableInitParameters struct {
+
+	// (Updatable) The OCID of the compartment.
+	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// Reference to a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDRef *v1.Reference `json:"compartmentIdRef,omitempty" tf:"-"`
+
+	// Selector for a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDSelector *v1.Selector `json:"compartmentIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// A user-friendly name. The name must be unique within the same virtual service and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) The priority of the route table. Lower value means higher priority. The routes are declared based on the priority.
+	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
+
+	// (Updatable) The route rules for the virtual service.
+	RouteRules []VirtualServiceRouteTableRouteRulesInitParameters `json:"routeRules,omitempty" tf:"route_rules,omitempty"`
+
+	// The OCID of the service mesh in which this access policy is created.
+	// +crossplane:generate:reference:type=VirtualService
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
+
+	// Reference to a VirtualService to populate virtualServiceId.
+	// +kubebuilder:validation:Optional
+	VirtualServiceIDRef *v1.Reference `json:"virtualServiceIdRef,omitempty" tf:"-"`
+
+	// Selector for a VirtualService to populate virtualServiceId.
+	// +kubebuilder:validation:Optional
+	VirtualServiceIDSelector *v1.Selector `json:"virtualServiceIdSelector,omitempty" tf:"-"`
+}
+
 type VirtualServiceRouteTableObservation struct {
+
+	// (Updatable) The OCID of the compartment.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// Unique identifier that is immutable on creation.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -48,10 +139,20 @@ type VirtualServiceRouteTableObservation struct {
 	// A message describing the current state in more detail. For example, can be used to provide actionable information for a resource in a Failed state.
 	LifecycleDetails *string `json:"lifecycleDetails,omitempty" tf:"lifecycle_details,omitempty"`
 
+	// A user-friendly name. The name must be unique within the same virtual service and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) The priority of the route table. Lower value means higher priority. The routes are declared based on the priority.
+	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
+
+	// (Updatable) The route rules for the virtual service.
+	RouteRules []VirtualServiceRouteTableRouteRulesObservation `json:"routeRules,omitempty" tf:"route_rules,omitempty"`
+
 	// The current state of the Resource.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
 
 	// Usage of system tag keys. These predefined keys are scoped to namespaces. Example: {"orcl-cloud.free-tier-retained": "true"}
+	// +mapType=granular
 	SystemTags map[string]*string `json:"systemTags,omitempty" tf:"system_tags,omitempty"`
 
 	// The time when this resource was created in an RFC3339 formatted datetime string.
@@ -59,6 +160,9 @@ type VirtualServiceRouteTableObservation struct {
 
 	// The time when this resource was updated in an RFC3339 formatted datetime string.
 	TimeUpdated *string `json:"timeUpdated,omitempty" tf:"time_updated,omitempty"`
+
+	// The OCID of the service mesh in which this access policy is created.
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
 }
 
 type VirtualServiceRouteTableParameters struct {
@@ -78,6 +182,7 @@ type VirtualServiceRouteTableParameters struct {
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
@@ -86,19 +191,20 @@ type VirtualServiceRouteTableParameters struct {
 
 	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// A user-friendly name. The name must be unique within the same virtual service and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// (Updatable) The priority of the route table. Lower value means higher priority. The routes are declared based on the priority.
 	// +kubebuilder:validation:Optional
 	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
 
 	// (Updatable) The route rules for the virtual service.
-	// +kubebuilder:validation:Required
-	RouteRules []VirtualServiceRouteTableRouteRulesParameters `json:"routeRules" tf:"route_rules,omitempty"`
+	// +kubebuilder:validation:Optional
+	RouteRules []VirtualServiceRouteTableRouteRulesParameters `json:"routeRules,omitempty" tf:"route_rules,omitempty"`
 
 	// The OCID of the service mesh in which this access policy is created.
 	// +crossplane:generate:reference:type=VirtualService
@@ -114,13 +220,52 @@ type VirtualServiceRouteTableParameters struct {
 	VirtualServiceIDSelector *v1.Selector `json:"virtualServiceIdSelector,omitempty" tf:"-"`
 }
 
+type VirtualServiceRouteTableRouteRulesInitParameters struct {
+
+	// (Updatable) The destination of the request.
+	Destinations []RouteRulesDestinationsInitParameters `json:"destinations,omitempty" tf:"destinations,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the rule will check that the content-type header has a application/grpc or one of the various application/grpc+ values.
+	IsGRPC *bool `json:"isGrpc,omitempty" tf:"is_grpc,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Route to match
+	Path *string `json:"path,omitempty" tf:"path,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Match type for the route
+	PathType *string `json:"pathType,omitempty" tf:"path_type,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) The maximum duration in milliseconds for the target service to respond to a request.  If provided, the timeout value overrides the default timeout of 15 seconds for the HTTP based route rules, and disabled (no timeout) when 'isGrpc' is true.  The value 0 (zero) indicates that the timeout is disabled.  For streaming responses from the target service, consider either keeping the timeout disabled or set a sufficiently high value.
+	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
+
+	// (Updatable) Type of the traffic target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
 type VirtualServiceRouteTableRouteRulesObservation struct {
+
+	// (Updatable) The destination of the request.
+	Destinations []RouteRulesDestinationsObservation `json:"destinations,omitempty" tf:"destinations,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) If true, the rule will check that the content-type header has a application/grpc or one of the various application/grpc+ values.
+	IsGRPC *bool `json:"isGrpc,omitempty" tf:"is_grpc,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Route to match
+	Path *string `json:"path,omitempty" tf:"path,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) Match type for the route
+	PathType *string `json:"pathType,omitempty" tf:"path_type,omitempty"`
+
+	// (Applicable when type=HTTP) (Updatable) The maximum duration in milliseconds for the target service to respond to a request.  If provided, the timeout value overrides the default timeout of 15 seconds for the HTTP based route rules, and disabled (no timeout) when 'isGrpc' is true.  The value 0 (zero) indicates that the timeout is disabled.  For streaming responses from the target service, consider either keeping the timeout disabled or set a sufficiently high value.
+	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
+
+	// (Updatable) Type of the traffic target.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
 type VirtualServiceRouteTableRouteRulesParameters struct {
 
 	// (Updatable) The destination of the request.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Destinations []RouteRulesDestinationsParameters `json:"destinations" tf:"destinations,omitempty"`
 
 	// (Applicable when type=HTTP) (Updatable) If true, the rule will check that the content-type header has a application/grpc or one of the various application/grpc+ values.
@@ -140,7 +285,7 @@ type VirtualServiceRouteTableRouteRulesParameters struct {
 	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
 
 	// (Updatable) Type of the traffic target.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Type *string `json:"type" tf:"type,omitempty"`
 }
 
@@ -148,6 +293,17 @@ type VirtualServiceRouteTableRouteRulesParameters struct {
 type VirtualServiceRouteTableSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     VirtualServiceRouteTableParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider VirtualServiceRouteTableInitParameters `json:"initProvider,omitempty"`
 }
 
 // VirtualServiceRouteTableStatus defines the observed state of VirtualServiceRouteTable.
@@ -157,19 +313,22 @@ type VirtualServiceRouteTableStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // VirtualServiceRouteTable is the Schema for the VirtualServiceRouteTables API. Provides the Virtual Service Route Table resource in Oracle Cloud Infrastructure Service Mesh service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type VirtualServiceRouteTable struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              VirtualServiceRouteTableSpec   `json:"spec"`
-	Status            VirtualServiceRouteTableStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.routeRules) || (has(self.initProvider) && has(self.initProvider.routeRules))",message="spec.forProvider.routeRules is a required parameter"
+	Spec   VirtualServiceRouteTableSpec   `json:"spec"`
+	Status VirtualServiceRouteTableStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

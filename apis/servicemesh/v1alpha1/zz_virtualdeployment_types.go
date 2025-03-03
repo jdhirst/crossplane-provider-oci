@@ -13,7 +13,22 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type ServiceDiscoveryInitParameters struct {
+
+	// (Updatable) The hostname of the virtual deployments.
+	Hostname *string `json:"hostname,omitempty" tf:"hostname,omitempty"`
+
+	// (Updatable) Type of service discovery.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
 type ServiceDiscoveryObservation struct {
+
+	// (Updatable) The hostname of the virtual deployments.
+	Hostname *string `json:"hostname,omitempty" tf:"hostname,omitempty"`
+
+	// (Updatable) Type of service discovery.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
 type ServiceDiscoveryParameters struct {
@@ -23,11 +38,20 @@ type ServiceDiscoveryParameters struct {
 	Hostname *string `json:"hostname,omitempty" tf:"hostname,omitempty"`
 
 	// (Updatable) Type of service discovery.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Type *string `json:"type" tf:"type,omitempty"`
 }
 
+type VirtualDeploymentAccessLoggingInitParameters struct {
+
+	// (Updatable) Determines if the logging configuration is enabled.
+	IsEnabled *bool `json:"isEnabled,omitempty" tf:"is_enabled,omitempty"`
+}
+
 type VirtualDeploymentAccessLoggingObservation struct {
+
+	// (Updatable) Determines if the logging configuration is enabled.
+	IsEnabled *bool `json:"isEnabled,omitempty" tf:"is_enabled,omitempty"`
 }
 
 type VirtualDeploymentAccessLoggingParameters struct {
@@ -37,7 +61,84 @@ type VirtualDeploymentAccessLoggingParameters struct {
 	IsEnabled *bool `json:"isEnabled,omitempty" tf:"is_enabled,omitempty"`
 }
 
+type VirtualDeploymentInitParameters struct {
+
+	// (Updatable) This configuration determines if logging is enabled and where the logs will be output.
+	AccessLogging []VirtualDeploymentAccessLoggingInitParameters `json:"accessLogging,omitempty" tf:"access_logging,omitempty"`
+
+	// (Updatable) The OCID of the compartment.
+	// +crossplane:generate:reference:type=github.com/oracle/provider-oci/apis/identity/v1alpha1.Compartment
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// Reference to a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDRef *v1.Reference `json:"compartmentIdRef,omitempty" tf:"-"`
+
+	// Selector for a Compartment in identity to populate compartmentId.
+	// +kubebuilder:validation:Optional
+	CompartmentIDSelector *v1.Selector `json:"compartmentIdSelector,omitempty" tf:"-"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
+	// (Updatable) The listeners for the virtual deployment.
+	Listeners []VirtualDeploymentListenersInitParameters `json:"listeners,omitempty" tf:"listeners,omitempty"`
+
+	// A user-friendly name. The name must be unique within the same virtual service and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) Service Discovery configuration for virtual deployments.
+	ServiceDiscovery []ServiceDiscoveryInitParameters `json:"serviceDiscovery,omitempty" tf:"service_discovery,omitempty"`
+
+	// The OCID of the service mesh in which this access policy is created.
+	// +crossplane:generate:reference:type=VirtualService
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
+
+	// Reference to a VirtualService to populate virtualServiceId.
+	// +kubebuilder:validation:Optional
+	VirtualServiceIDRef *v1.Reference `json:"virtualServiceIdRef,omitempty" tf:"-"`
+
+	// Selector for a VirtualService to populate virtualServiceId.
+	// +kubebuilder:validation:Optional
+	VirtualServiceIDSelector *v1.Selector `json:"virtualServiceIdSelector,omitempty" tf:"-"`
+}
+
+type VirtualDeploymentListenersInitParameters struct {
+
+	// (Updatable) The maximum duration in milliseconds for which the request's stream may be idle. The value 0 (zero) indicates that the timeout is disabled.
+	IdleTimeoutInMs *string `json:"idleTimeoutInMs,omitempty" tf:"idle_timeout_in_ms,omitempty"`
+
+	// (Updatable) Port in which virtual deployment is running.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+
+	// (Updatable) Type of protocol used in virtual deployment.
+	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
+
+	// (Updatable) The maximum duration in milliseconds for the deployed service to respond to an incoming request through the listener.  If provided, the timeout value overrides the default timeout of 15 seconds for the HTTP/HTTP2 listeners, and disabled (no timeout) for the GRPC listeners. The value 0 (zero) indicates that the timeout is disabled.  The timeout cannot be configured for the TCP and TLS_PASSTHROUGH listeners.  For streaming responses from the deployed service, consider either keeping the timeout disabled or set a sufficiently high value.
+	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
+}
+
 type VirtualDeploymentListenersObservation struct {
+
+	// (Updatable) The maximum duration in milliseconds for which the request's stream may be idle. The value 0 (zero) indicates that the timeout is disabled.
+	IdleTimeoutInMs *string `json:"idleTimeoutInMs,omitempty" tf:"idle_timeout_in_ms,omitempty"`
+
+	// (Updatable) Port in which virtual deployment is running.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+
+	// (Updatable) Type of protocol used in virtual deployment.
+	Protocol *string `json:"protocol,omitempty" tf:"protocol,omitempty"`
+
+	// (Updatable) The maximum duration in milliseconds for the deployed service to respond to an incoming request through the listener.  If provided, the timeout value overrides the default timeout of 15 seconds for the HTTP/HTTP2 listeners, and disabled (no timeout) for the GRPC listeners. The value 0 (zero) indicates that the timeout is disabled.  The timeout cannot be configured for the TCP and TLS_PASSTHROUGH listeners.  For streaming responses from the deployed service, consider either keeping the timeout disabled or set a sufficiently high value.
+	RequestTimeoutInMs *string `json:"requestTimeoutInMs,omitempty" tf:"request_timeout_in_ms,omitempty"`
 }
 
 type VirtualDeploymentListenersParameters struct {
@@ -47,11 +148,11 @@ type VirtualDeploymentListenersParameters struct {
 	IdleTimeoutInMs *string `json:"idleTimeoutInMs,omitempty" tf:"idle_timeout_in_ms,omitempty"`
 
 	// (Updatable) Port in which virtual deployment is running.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Port *float64 `json:"port" tf:"port,omitempty"`
 
 	// (Updatable) Type of protocol used in virtual deployment.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
 	Protocol *string `json:"protocol" tf:"protocol,omitempty"`
 
 	// (Updatable) The maximum duration in milliseconds for the deployed service to respond to an incoming request through the listener.  If provided, the timeout value overrides the default timeout of 15 seconds for the HTTP/HTTP2 listeners, and disabled (no timeout) for the GRPC listeners. The value 0 (zero) indicates that the timeout is disabled.  The timeout cannot be configured for the TCP and TLS_PASSTHROUGH listeners.  For streaming responses from the deployed service, consider either keeping the timeout disabled or set a sufficiently high value.
@@ -61,16 +162,43 @@ type VirtualDeploymentListenersParameters struct {
 
 type VirtualDeploymentObservation struct {
 
+	// (Updatable) This configuration determines if logging is enabled and where the logs will be output.
+	AccessLogging []VirtualDeploymentAccessLoggingObservation `json:"accessLogging,omitempty" tf:"access_logging,omitempty"`
+
+	// (Updatable) The OCID of the compartment.
+	CompartmentID *string `json:"compartmentId,omitempty" tf:"compartment_id,omitempty"`
+
+	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
+	// +mapType=granular
+	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
+
+	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
+	// +mapType=granular
+	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
+
 	// Unique identifier that is immutable on creation.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// A message describing the current state in more detail. For example, can be used to provide actionable information for a resource in a Failed state.
 	LifecycleDetails *string `json:"lifecycleDetails,omitempty" tf:"lifecycle_details,omitempty"`
 
+	// (Updatable) The listeners for the virtual deployment.
+	Listeners []VirtualDeploymentListenersObservation `json:"listeners,omitempty" tf:"listeners,omitempty"`
+
+	// A user-friendly name. The name must be unique within the same virtual service and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Updatable) Service Discovery configuration for virtual deployments.
+	ServiceDiscovery []ServiceDiscoveryObservation `json:"serviceDiscovery,omitempty" tf:"service_discovery,omitempty"`
+
 	// The current state of the Resource.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
 
 	// Usage of system tag keys. These predefined keys are scoped to namespaces. Example: {"orcl-cloud.free-tier-retained": "true"}
+	// +mapType=granular
 	SystemTags map[string]*string `json:"systemTags,omitempty" tf:"system_tags,omitempty"`
 
 	// The time when this resource was created in an RFC3339 formatted datetime string.
@@ -78,6 +206,9 @@ type VirtualDeploymentObservation struct {
 
 	// The time when this resource was updated in an RFC3339 formatted datetime string.
 	TimeUpdated *string `json:"timeUpdated,omitempty" tf:"time_updated,omitempty"`
+
+	// The OCID of the service mesh in which this access policy is created.
+	VirtualServiceID *string `json:"virtualServiceId,omitempty" tf:"virtual_service_id,omitempty"`
 }
 
 type VirtualDeploymentParameters struct {
@@ -101,6 +232,7 @@ type VirtualDeploymentParameters struct {
 
 	// (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: {"foo-namespace.bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	DefinedTags map[string]*string `json:"definedTags,omitempty" tf:"defined_tags,omitempty"`
 
 	// (Updatable) Description of the resource. It can be changed after creation. Avoid entering confidential information.  Example: This is my new resource
@@ -109,6 +241,7 @@ type VirtualDeploymentParameters struct {
 
 	// (Updatable) Simple key-value pair that is applied without any predefined name, type or scope. Exists for cross-compatibility only. Example: {"bar-key": "value"}
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	FreeformTags map[string]*string `json:"freeformTags,omitempty" tf:"freeform_tags,omitempty"`
 
 	// (Updatable) The listeners for the virtual deployment.
@@ -116,8 +249,8 @@ type VirtualDeploymentParameters struct {
 	Listeners []VirtualDeploymentListenersParameters `json:"listeners,omitempty" tf:"listeners,omitempty"`
 
 	// A user-friendly name. The name must be unique within the same virtual service and cannot be changed after creation. Avoid entering confidential information.  Example: My unique resource name
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// (Updatable) Service Discovery configuration for virtual deployments.
 	// +kubebuilder:validation:Optional
@@ -141,6 +274,17 @@ type VirtualDeploymentParameters struct {
 type VirtualDeploymentSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     VirtualDeploymentParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider VirtualDeploymentInitParameters `json:"initProvider,omitempty"`
 }
 
 // VirtualDeploymentStatus defines the observed state of VirtualDeployment.
@@ -150,19 +294,21 @@ type VirtualDeploymentStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // VirtualDeployment is the Schema for the VirtualDeployments API. Provides the Virtual Deployment resource in Oracle Cloud Infrastructure Service Mesh service
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,oci}
 type VirtualDeployment struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              VirtualDeploymentSpec   `json:"spec"`
-	Status            VirtualDeploymentStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
+	Spec   VirtualDeploymentSpec   `json:"spec"`
+	Status VirtualDeploymentStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
